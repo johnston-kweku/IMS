@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="flex gap-6 w-full px-3 items-start">
+    <div class="flex-1 px-6 py-4 bg-white border border-gray-300 rounded-2xl shadow-2xl">
+        <h1 class="text-xl text-gray-500 font-bold text-start">
+            Available Products
+        </h1>
+        <input type="search" name="query" id="id_query" placeholder="Search..." class="w-full px-3 py-2 rounded-2xl placeholder:text-gray-400 font-bold border-b border-gray-300 my-4">
+
+        {% for drug in drugs %}
+            <div data-drug-id="{{drug.id}}" 
+                 data-drug-name="{{drug.name}}" 
+                 data-drug-price="{{drug.retail_price}}" 
+                 data-drug-stock="{{drug.inventory}}"
+                 class="w-full flex justify-between border-t border-gray-300 rounded-lg px-4 py-3">
+                <div class="flex flex-col">
+                    <p class="text-lg font-medium">{{drug.name}}</p>
+                    <span class="flex gap-4">
+                        <p class="text-xs text-gray-500">
+                            ¢{{drug.retail_price}}
+                        </p>
+                        <p class="text-xs text-gray-500 stock-text">
+                            Stock: {{drug.inventory}}
+                        </p>
+                    </span>
+                </div>
+                <button data-drug-id="{{drug.id}}" id="drug-{{drug.id}}" type="button" class="text-blue-700 text-xs font-bold p-2 bg-blue-50 rounded-lg cursor-pointer active:scale-95">
+                    <svg class="w-6 h-6 stroke-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                    </svg>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+    {% include '_cart.html' with checkout_url='/sales/retail/checkout/'%}
+</div>
+
+<script src="{% static 'js/sales/retail.js' %}"></script>
+{% endblock content %}

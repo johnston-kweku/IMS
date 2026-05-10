@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PharmaFlow</title>
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+</head>
+<body class="bg-blue-50 font-sans min-h-screen {% if not request.user.is_authenticated %}flex items-center justify-center{% endif %}">
+
+    {% if request.user.is_authenticated %}
+    <nav class="bg-white w-full fixed top-0 left-0 flex justify-between py-4 px-8 items-center shadow-sm border-b border-slate-100 z-50">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                </svg>
+            </div>
+            <h1 class="text-xl font-black text-slate-800 tracking-tight">PHARMAFLOW</h1>
+        </div>
+        <div class="flex items-center gap-6 font-medium text-slate-600">
+            <a href="{% url 'inventory:home' %}" class="hover:text-blue-600 transition-colors">Dashboard</a>
+            <a href="#" class="hover:text-blue-600 transition-colors">Sales</a>
+            <div class="h-6 w-px bg-slate-200"></div>
+            <span class="text-sm text-slate-400">{{ request.user.full_name }} ({{ request.user.role }})</span>
+            <a href="{% url 'accounts:logout' %}" class="bg-slate-100 hover:bg-red-50 hover:text-red-600 px-4 py-2 rounded-xl text-sm transition-all font-bold">Logout</a>
+        </div>
+    </nav>
+    {% endif %}
+    
+    <main class="w-full flex justify-center p-4 {% if request.user.is_authenticated %}pt-24{% endif %}">
+        {% block content %}{% endblock content %}
+    </main>
+
+    <!-- toast container -->
+    <div class="toast-container fixed top-18 z-50 right-6"></div>
+    <script src="{% static 'js/utils/toastManager.js' %}"></script>
+</body>
+</html>

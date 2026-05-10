@@ -1,0 +1,22 @@
+<div class="bg-white w-4/12 p-4 h-fit max-h-[calc(100vh-120px)] overflow-y-auto shadow-2xl rounded-2xl sticky top-24 self-start">
+        <div class="w-full flex items-center justify-start border-b border-gray-100 pb-4 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+            </svg>
+            <p class="text-lg font-bold">Cart</p>
+        </div>
+        <!-- Cart Items Placeholder -->
+        <div id="cart-items" class="space-y-3 mb-6">
+            <p class="text-sm text-gray-400 text-center py-8">Your cart is empty</p>
+        </div>
+
+        <div class="border-t border-gray-100 pt-4">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-gray-500 font-medium">Total Amount</span>
+                <span id="cart-total" class="text-xl font-black text-blue-600">¢0.00</span>
+            </div>
+            <button data-checkout-url="{{checkout_url}}" id="checkout-btn" onclick="cart.checkout()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-blue-100 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                Complete Sale
+            </button>
+        </div>
+</div>
