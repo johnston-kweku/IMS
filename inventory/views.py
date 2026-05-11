@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum, F, ExpressionWrapper, DecimalField
+from django.db.models import Sum, F, ExpressionWrapper, DecimalField, Count
 from django.db.models.functions import TruncMonth
 from django.utils import timezone
 from .models import Drug
@@ -61,14 +61,16 @@ def home(request):
                 F('total_cost') - F('drug__cost_price') * F('quantity'),
                 output_field=DecimalField()
             )
-        )
+        ),
+        sales_count=Count('sale')
     ).order_by('month')
 
     chart_data = [
         {
             'month': item['month'].strftime('%b'),
             'revenue': float(item['revenue']),
-            'profit': float(item['profit'])
+            'profit': float(item['profit']),
+            'sales_count': item['sales_count']
         }
         for item in monthly_data
     ]
