@@ -67,14 +67,20 @@
     </div>
 
     <!-- Charts -->
+
     <div class="grid grid-cols-2 gap-6">
         <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
             <h2 class="text-lg font-bold text-gray-900 mb-4">Revenue & Profit</h2>
-            <canvas id="revenueChart" style="height:300px;"></canvas>
+            <div class="relative h-72">
+                <canvas id="revenueChart"></canvas>
+            </div>
         </div>
+
         <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <h2 class="text-lg font-bold text.gray-900 mb-4">Sales Trend</h2>
-            <canvas id="salesTrendChart" style="height:300px;"></canvas>
+            <h2 class="text-lg font-bold text-gray-900 mb-4">Sales Trend</h2>
+            <div class="relative h-72">
+                <canvas id="salesTrendChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
