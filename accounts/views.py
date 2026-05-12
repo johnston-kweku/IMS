@@ -3,9 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib import messages
 from django.http import JsonResponse
+from django.contrib.auth import get_user_model
+from .decorators import role_required
+from .forms import UserCreationForm
 
-
-
+User = get_user_model()
 # Create your views here.
 
 def login_view(request):
@@ -37,3 +39,27 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('accounts:login')
+
+
+
+@role_required('ADMIN', 'MANAGER')
+def create_user(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            role = form.cleaned_data['role']
+            if request.user.can_create_role(role):
+                form.save()
+                return redirect('accounts:user_list')
+            else:
+                form.add_error('role', 'You do not have permission to create this role')
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'accounts/create_user.html', {'form': form})
+
+
+@role_required('ADMIN', 'MANAGER')
+def user_list(request):
+    users = User.objects.all()
+    return render(request, 'accounts/user_list.html', {'users': users})
