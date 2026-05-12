@@ -20,8 +20,11 @@
             <h1 class="text-xl font-black text-slate-800 tracking-tight">PHARMAFLOW</h1>
         </div>
         <div class="flex items-center gap-6 font-medium text-slate-600">
+            {% if request.user.is_admin or request.user.is_manager %}
             <a href="{% url 'inventory:home' %}" class="hover:text-blue-600 transition-colors">Dashboard</a>
+            <a href="{% url 'accounts:user_list' %}" class="hover:text-blue-600 transition-colors">Staff</a>
             <a href="#" class="hover:text-blue-600 transition-colors">Sales</a>
+            {% endif %}
             <div class="h-6 w-px bg-slate-200"></div>
             <span class="text-sm text-slate-400">{{ request.user.full_name }} ({{ request.user.role }})</span>
             <a href="{% url 'accounts:logout' %}" class="bg-slate-100 hover:bg-red-50 hover:text-red-600 px-4 py-2 rounded-xl text-sm transition-all font-bold">Logout</a>

@@ -16,6 +16,7 @@ class User(AbstractUser):
         null=False,
         blank=False
     )
+    phone_number = models.CharField(max_length=15, blank=True, default='')
 
 
     def is_admin(self):
@@ -29,3 +30,19 @@ class User(AbstractUser):
     
     def is_retailer(self):
         return self.role == self.UserRoles.RETAILER
+
+    def can_create_role(self, role):
+        if self.is_admin():
+            return role in [
+                self.UserRoles.MANAGER,
+                self.UserRoles.WHOLESALER,
+                self.UserRoles.RETAILER
+            ]
+        
+        if self.is_manager():
+            return role in [
+                self.UserRoles.WHOLESALER,
+                self.UserRoles.RETAILER
+            ]
+        
+        return False
