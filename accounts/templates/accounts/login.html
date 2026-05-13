@@ -13,6 +13,19 @@
             <p class="text-slate-500 text-sm mt-1 font-medium">Pharmacy Management System</p>
         </div>
 
+        {% if messages %}
+            <div class="w-full">
+                {% for message in messages %}
+                    <div class="bg-red-50 border border-red-100 text-red-600 px-4 py-3 rounded-xl text-xs font-bold flex items-center gap-2">
+                        <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                        </svg>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <form method="POST" class="w-full flex flex-col gap-5">
             {% csrf_token %}
             

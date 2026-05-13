@@ -23,13 +23,20 @@ def login_view(request):
         
         if user is not None:
             if user.role == role:
-                auth_login(request, user)
-                if user.is_admin() or user.is_manager():
-                    return redirect('inventory:home')
-                elif user.is_wholesaler():
-                    return redirect('sales:wholesale')
-                elif user.is_retailer():
-                    return redirect('sales:retail')
+                if not user.is_active:
+                    messages.error(request, "Your account is inactive. Please contact an admin.")
+                else:
+                    auth_login(request, user)
+                    if user.is_admin() or user.is_manager():
+                        return redirect('inventory:home')
+                    elif user.is_wholesaler():
+                        return redirect('sales:wholesale')
+                    elif user.is_retailer():
+                        return redirect('sales:retail')
+            else:
+                messages.error(request, f"Invalid role selected for this user.")
+        else:
+            messages.error(request, "Invalid username or password.")
         
     return render(request, 'accounts/login.html')
 
