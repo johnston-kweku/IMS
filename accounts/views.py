@@ -63,3 +63,27 @@ def create_user(request):
 def user_list(request):
     users = User.objects.all()
     return render(request, 'accounts/user_list.html', {'users': users})
+
+
+@role_required('ADMIN')
+def toggle_user_active(request, username):
+    user = get_object_or_404(User, username=username)
+
+    if user.is_active:
+        user.is_active = False
+        user.save()
+        return JsonResponse({
+            'success': True,
+            'is_active': False,
+            'message': 'User deactivated successfully'
+        })
+    else:
+        user.is_active = True
+        user.save()
+        return JsonResponse({
+            'success': True,
+            'is_active': True,
+            'message': 'User activated successfully'
+        })
+
+    
