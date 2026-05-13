@@ -22,8 +22,9 @@
         <div class="flex items-center gap-6 font-medium text-slate-600">
             {% if request.user.is_admin or request.user.is_manager %}
             <a href="{% url 'inventory:home' %}" class="hover:text-blue-600 transition-colors">Dashboard</a>
+            <a href="{% url 'inventory:drug_list' %}" class="hover:text-blue-600 transition-colors">Inventory</a>
             <a href="{% url 'accounts:user_list' %}" class="hover:text-blue-600 transition-colors">Staff</a>
-            <a href="#" class="hover:text-blue-600 transition-colors">Sales</a>
+            <a href="{% url 'sales:sales_list' %}" class="hover:text-blue-600 transition-colors">Sales</a>
             {% endif %}
             <div class="h-6 w-px bg-slate-200"></div>
             <span class="text-sm text-slate-400">{{ request.user.full_name }} ({{ request.user.role }})</span>

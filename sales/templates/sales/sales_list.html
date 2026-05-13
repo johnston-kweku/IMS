@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="w-full max-w-7xl mx-auto px-4">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-3xl font-black text-slate-800 tracking-tight">Sales History</h1>
+            <p class="text-slate-500 font-medium mt-1">Review all completed transactions</p>
+        </div>
+    </div>
+
+    <!-- Sales Table -->
+    <div class="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/50 border-b border-slate-100">
+                        <th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Date & Time</th>
+                        <th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Seller</th>
+                        <th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Type</th>
+                        <th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Items Sold</th>
+                        <th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest text-right">Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    {% for sale in sales %}
+                        <tr class="hover:bg-slate-50/80 transition-colors group">
+                            <td class="px-6 py-4">
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-slate-700">{{ sale.created_at|date:"M d, Y" }}</span>
+                                    <span class="text-[10px] text-slate-400 font-bold uppercase">{{ sale.created_at|date:"P" }}</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 font-semibold text-slate-600 text-sm">{{ sale.seller.full_name }}</td>
+                            <td class="px-6 py-4">
+                                {% if sale.type == 'RETAIL' %}
+                                    <span class="bg-blue-50 text-blue-600 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border border-blue-100">Retail</span>
+                                {% else %}
+                                    <span class="bg-indigo-50 text-indigo-600 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border border-indigo-100">Wholesale</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-col gap-1">
+                                    {% for item in sale.saleitem_set.all %}
+                                        <span class="text-xs text-slate-500 font-medium">{{ item.quantity }}x {{ item.drug.name }}</span>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <span class="text-base font-black text-slate-900">¢{{ sale.total_cost }}</span>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="px-6 py-12 text-center text-slate-400">
+                                <p class="text-lg font-bold">No sales records found</p>
+                                <p class="text-sm">Completed sales will appear here.</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}

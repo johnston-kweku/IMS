@@ -1,13 +1,19 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.db.models import Sum, F, ExpressionWrapper, DecimalField, Count
 from django.db.models.functions import TruncMonth
 from django.utils import timezone
+from django.http import JsonResponse
+from django.core.exceptions import ValidationError
+from django.db.models import ProtectedError
+from django.contrib import messages
 from .models import Drug
+from .forms import DrugForm
 from sales.models import Sale, SaleItem
 from datetime import timedelta
 from accounts.models import User
-
+from accounts.decorators import role_required
 
 # Create your views here.
 
@@ -87,3 +93,70 @@ def home(request):
     }
 
     return render(request, 'inventory/dashboard.html', context)
+
+
+
+@role_required('ADMIN', 'MANAGER')
+def drug_list(request):
+    drugs = Drug.objects.all().order_by('id')
+    return render(request, 'inventory/drug_list.html', {
+        'drugs': drugs
+    })
+
+
+@role_required('ADMIN', 'MANAGER')
+def update_drug(request, drug_id):
+    if request.method == 'POST':
+        drug = get_object_or_404(Drug, id=drug_id)
+
+        name = request.POST.get('name', drug.name)
+        wholesale_price = request.POST.get('wholesale_price', drug.wholesale_price)
+        retail_price = request.POST.get('retail_price', drug.retail_price)
+
+        drug.name, drug.wholesale_price, drug.retail_price = name, wholesale_price, retail_price
+        try:
+            drug.save()
+        except ValidationError as e:
+            return JsonResponse({'success': False, 'message': str(e)}, status=400)
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Drug updated successfully',
+            'drug': {
+                'name': drug.name,
+                'wholesale_price': str(drug.wholesale_price),
+                'retail_price': str(drug.retail_price)
+            }
+        })
+    
+    return JsonResponse({
+        'success':False,
+        'message': 'Invalid request'
+    }, status=400)
+
+@require_POST
+@role_required('ADMIN', 'MANAGER')
+def delete_drug(request, drug_id):
+    drug = get_object_or_404(Drug, id=drug_id)
+    try:
+        drug.delete()
+        return JsonResponse({'success': True, 'message': 'Drug deleted successfully'})
+    except ProtectedError:
+        return JsonResponse({'success': False, 'message': 'Cannot delete drug with existing sales records'}, status=400)
+
+@login_required
+@role_required('ADMIN', 'MANAGER')
+def create_drug(request):
+    if request.method == 'POST':
+        form = DrugForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Drug added successfully!')
+            return redirect('inventory:drug_list')
+    else:
+        form = DrugForm()
+    
+    return render(request, 'inventory/create_drug.html', {
+        'form': form,
+        'title': 'Add New Drug'
+    })

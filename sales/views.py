@@ -114,3 +114,10 @@ def process_retail_sale(request):
         return JsonResponse({'success': False, 'message': str(e)}, status=400)
     except Exception as e:
         return JsonResponse({'success': False, 'message': f'Server error: {str(e)}'}, status=500)
+@login_required
+@role_required('ADMIN', 'MANAGER')
+def sales_list(request):
+    sales = Sale.objects.all().order_by('-created_at')
+    return render(request, 'sales/sales_list.html', {
+        'sales': sales
+    })
