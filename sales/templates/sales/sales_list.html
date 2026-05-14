@@ -49,7 +49,14 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <span class="text-base font-black text-slate-900">¢{{ sale.total_cost }}</span>
+                                <div class="flex items-center justify-end gap-3">
+                                    <span class="text-base font-black text-slate-900">¢{{ sale.total_cost }}</span>
+                                    <a href="{% url 'sales:generate_receipt' sale.id %}" target="_blank" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="Print Receipt">
+                                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.89l-2.1 2.1c-.19.19-.32.44-.32.71 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.27-.13-.52-.32-.71l-2.1-2.1m-10.3 0l2.1-2.1c.19-.19.32-.44.32-.71 0-.55-.45-1-1-1h-1.4c-.27 0-.52.13-.71.32l-2.1 2.1m10.3 0l-2.1-2.1c-.19-.19-.32-.44-.32-.71 0-.55.45-1 1-1h1.4c.27 0 .52.13.71.32l2.1 2.1M8.25 10.5V6.75a4.5 4.5 0 119 0v3.75m-9 0H18M9.75 21h4.5" />
+                                        </svg>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     {% empty %}

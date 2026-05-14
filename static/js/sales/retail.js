@@ -182,6 +182,12 @@ class RetailCart {
                 toast.show(data.message);
                 this.items = [];
                 this.saveAndRender();
+                
+                // Open receipt in new window
+                if (data.sale_id) {
+                    window.open(`/sales/receipt/${data.sale_id}/`, '_blank');
+                }
+
                 data.updated_stock.forEach(drug => {
                     const row = document.querySelector(`[data-drug-id="${drug.id}"]`)
                     if (row) {

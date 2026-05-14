@@ -89,7 +89,8 @@ def home(request):
         'this_month_sales_count':this_month_sales_count,
         'total_drugs': total_drugs,
         'users_count': users_count,
-        'chart_data': chart_data
+        'chart_data': chart_data,
+        'recent_sales': Sale.objects.all().order_by('-created_at')[:5]
     }
 
     return render(request, 'inventory/dashboard.html', context)
@@ -112,8 +113,13 @@ def update_drug(request, drug_id):
         name = request.POST.get('name', drug.name)
         wholesale_price = request.POST.get('wholesale_price', drug.wholesale_price)
         retail_price = request.POST.get('retail_price', drug.retail_price)
+        inventory = request.POST.get('inventory', drug.inventory)
 
-        drug.name, drug.wholesale_price, drug.retail_price = name, wholesale_price, retail_price
+        drug.name = name
+        drug.wholesale_price = wholesale_price
+        drug.retail_price = retail_price
+        drug.inventory = inventory
+        
         try:
             drug.save()
         except ValidationError as e:
@@ -125,7 +131,8 @@ def update_drug(request, drug_id):
             'drug': {
                 'name': drug.name,
                 'wholesale_price': str(drug.wholesale_price),
-                'retail_price': str(drug.retail_price)
+                'retail_price': str(drug.retail_price),
+                'inventory': drug.inventory
             }
         })
     

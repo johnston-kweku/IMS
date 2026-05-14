@@ -28,6 +28,11 @@ class SaleItem(models.Model):
     quantity = models.PositiveIntegerField()
     total_cost = models.DecimalField(max_digits=12, decimal_places=2)
 
+    @property
+    def unit_price(self):
+        if self.quantity > 0:
+            return self.total_cost / self.quantity
+        return 0
 
     def save(self,*args, **kwargs):
         if not self.pk:

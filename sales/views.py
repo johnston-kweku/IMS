@@ -49,6 +49,7 @@ def process_wholesale_sale(request):
         return JsonResponse({
             'success': True,
             'message': 'Sale processed successfully',
+            'sale_id': sale.id,
             'updated_stock': [
                 {'id': item.drug.id, 'inventory':item.drug.inventory}
                 for item in sale.saleitem_set.all()
@@ -102,6 +103,7 @@ def process_retail_sale(request):
         return JsonResponse({
             'success': True,
             'message': 'Sale processed successfully',
+            'sale_id': sale.id,
             'updated_stock': [
                 {'id': item.drug.id, 'inventory':item.drug.inventory}
                 for item in sale.saleitem_set.all()
@@ -121,3 +123,8 @@ def sales_list(request):
     return render(request, 'sales/sales_list.html', {
         'sales': sales
     })
+
+@login_required
+def generate_receipt(request, sale_id):
+    sale = get_object_or_404(Sale, id=sale_id)
+    return render(request, 'sales/receipt.html', {'sale': sale})

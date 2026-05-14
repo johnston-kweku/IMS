@@ -68,14 +68,20 @@ def create_user(request):
 
 @role_required('ADMIN', 'MANAGER')
 def user_list(request):
-    users = User.objects.all()
+    users = User.objects.filter(is_superuser=False)
     return render(request, 'accounts/user_list.html', {'users': users})
 
 
-@role_required('ADMIN')
+@role_required('ADMIN', 'MANAGER')
 def toggle_user_active(request, username):
     user = get_object_or_404(User, username=username)
-
+    if user.is_superuser: 
+        return JsonResponse({
+            'success': False,
+            'is_active': True,
+            'message': 'Cannot deactivate this user'
+        })
+    
     if user.is_active:
         user.is_active = False
         user.save()
