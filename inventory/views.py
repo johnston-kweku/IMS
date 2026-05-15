@@ -55,7 +55,7 @@ def home(request):
 
     total_drugs = Drug.objects.count()
 
-    users_count = User.objects.count()
+    users_count = User.objects.filter(is_superuser=False).count()
 
     six_months_ago = now - timedelta(days=180)
     monthly_data = SaleItem.objects.filter(sale__created_at__gte=six_months_ago).annotate(
